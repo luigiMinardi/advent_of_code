@@ -19,6 +19,7 @@ func main() {
     var current_game_id = 1
     var part1_answer = 0
     var part2_answer = 0
+
     for file_scanner.Scan() {
         fmt.Println(file_scanner.Text())
         var rgbmap map[string]int = make(map[string]int)
