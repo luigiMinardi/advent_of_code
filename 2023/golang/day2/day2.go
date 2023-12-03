@@ -17,7 +17,8 @@ func main() {
     file_scanner := bufio.NewScanner(file)
     
     var current_game_id = 1
-    var result = 0
+    var part1_answer = 0
+    var part2_answer = 0
     for file_scanner.Scan() {
         fmt.Println(file_scanner.Text())
         var rgbmap map[string]int = make(map[string]int)
@@ -35,11 +36,14 @@ func main() {
                 fmt.Printf("rounds: %v\n", rgbmap)
             }
         }
+        part2_answer += rgbmap["red"]*rgbmap["green"]*rgbmap["blue"]
+
         if rgbmap["red"] <= 12 && rgbmap["green"] <= 13 && rgbmap["blue"] <= 14 {
-            result += current_game_id
+            part1_answer += current_game_id
         }
         current_game_id++
     }
 
-    fmt.Printf("result: %v\n", result)
+    fmt.Printf("part1_answer: %v\n", part1_answer)
+    fmt.Printf("part2_answer: %v\n", part2_answer)
 }
