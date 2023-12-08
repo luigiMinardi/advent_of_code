@@ -27,9 +27,16 @@ func main() {
         range_len int
     }
 
-    type PlantProcess struct {
-        soil, fertilizer, water, light, temperature, humidity, location int
-    }
+    type PlantProcess int
+    const ( 
+        soil PlantProcess = iota
+        fertilizer
+		water
+		light
+		temperature
+		humidity
+		location
+    )
 
     type Categories int
     const (
@@ -43,7 +50,7 @@ func main() {
     )
 
     var maps map[Categories][]SourceToDestMap = make(map[Categories][]SourceToDestMap)
-    var plant_data map[int]PlantProcess = make(map[int]PlantProcess)
+    var plant_data map[int]map[PlantProcess]int = make(map[int]map[PlantProcess]int)
 
     var seeds []int
     var line int = 0
@@ -77,6 +84,21 @@ func main() {
     fmt.Println(plant_data, searching, curr_cat)
     fmt.Println(maps)
     for _, seed := range seeds {
-        fmt.Println(seed, isOnRange(seed, maps[0][1].source_range, maps[0][1].range_len))
+        plant_data[seed] = make(map[PlantProcess]int)
+        var isMapped bool = false
+        for _, value := range maps[0] {
+            fmt.Println(seed, isOnRange(seed, value.source_range, value.range_len), value)
+            if isOnRange(seed, value.source_range, value.range_len) {
+                soil := value.dest_range+seed-value.source_range
+                plant_data[seed][PlantProcess(curr_cat)] = soil
+                fmt.Println(soil, plant_data)
+                isMapped = true
+                break
+            }
+        }
+        if !isMapped { 
+            plant_data[seed][PlantProcess(curr_cat)] = seed
+            fmt.Println(seed, plant_data)
+        }
     }
 }
