@@ -17,7 +17,7 @@ func isOnRange(value int, start int, rangeN int) bool {
 }
 
 func main() {
-    file, _ := os.Open("example.txt")
+    file, _ := os.Open("input.txt")
 
     file_scanner := bufio.NewScanner(file)
 
@@ -52,6 +52,8 @@ func main() {
     var maps map[Categories][]SourceToDestMap = make(map[Categories][]SourceToDestMap)
     var plant_data map[int]map[PlantProcess]int = make(map[int]map[PlantProcess]int)
 
+    var p1 int = int(^uint(0) >> 1) // max int
+
     var seeds []int
     var line int = 0
     var cat Categories = -1
@@ -80,25 +82,30 @@ func main() {
     }
 
     var searching = 0
-    var curr_cat Categories = 0 
-    fmt.Println(plant_data, searching, curr_cat)
+    fmt.Println(plant_data, searching)
     fmt.Println(maps)
     for _, seed := range seeds {
         plant_data[seed] = make(map[PlantProcess]int)
-        var isMapped bool = false
-        for _, value := range maps[0] {
-            fmt.Println(seed, isOnRange(seed, value.source_range, value.range_len), value)
-            if isOnRange(seed, value.source_range, value.range_len) {
-                soil := value.dest_range+seed-value.source_range
-                plant_data[seed][PlantProcess(curr_cat)] = soil
-                fmt.Println(soil, plant_data)
-                isMapped = true
-                break
+        searching = seed
+        for curr_cat := 0; curr_cat < len(maps); curr_cat++ {
+            var isMapped bool = false
+            for _, value := range maps[Categories(curr_cat)] {
+                if isOnRange(searching, value.source_range, value.range_len) {
+                    curr_process := value.dest_range+searching-value.source_range
+                    plant_data[seed][PlantProcess(curr_cat)] = curr_process
+                    isMapped = true
+                    break
+                }
             }
+            if !isMapped { 
+                plant_data[seed][PlantProcess(curr_cat)] = searching
+            }
+            searching = plant_data[seed][PlantProcess(curr_cat)]
         }
-        if !isMapped { 
-            plant_data[seed][PlantProcess(curr_cat)] = seed
-            fmt.Println(seed, plant_data)
+        if plant_data[seed][6] < p1 {
+            fmt.Println("------------------------", plant_data[seed][6])
+            p1 = plant_data[seed][6]
         }
     }
+    fmt.Println(p1)
 }
