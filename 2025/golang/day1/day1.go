@@ -86,7 +86,7 @@ func part2() {
 		}
 		// 76 -> rune for L
 		// 82 -> rune for R
-		for i := 0; i < movements; i++ {
+		for range movements {
 			if direction == 76 {
 				dial--
 			} else {

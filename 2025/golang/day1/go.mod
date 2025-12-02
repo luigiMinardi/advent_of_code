@@ -1,3 +1,3 @@
-module 2025day1
+module year2025day1
 
 go 1.25
